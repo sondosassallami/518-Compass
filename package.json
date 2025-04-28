@@ -1,0 +1,25 @@
+{
+  "name": "518-compass",
+  "version": "1.0.0",
+  "description": "Discover the hidden gems of the 518 New York area!   518-Compass is a community-driven app built for parents, caregivers, and families to easily find, review, and share local playgrounds, indoor play areas, libraries, daycares, and more in the great Upstate New York!  My mission is to create a reliable, real-world resource — updated by the community, for the community to have recent, up-to-date information on facilities to navigate with clear straightforward comments left by contributors.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sondosassallami/518-Compass.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sondosassallami/518-Compass/issues"
+  },
+  "homepage": "https://github.com/sondosassallami/518-Compass#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0"
+  }
+}
