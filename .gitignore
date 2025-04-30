@@ -1,0 +1,20 @@
+# Node modules
+node_modules/
+
+# Environment variable file
+.env
+
+# Logs
+logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# npm package lock files (optional, can be committed depending on preference)
+package-lock.json
+
+# Other optional files to ignore
+*.bak
+*.swp
