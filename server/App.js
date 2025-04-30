@@ -18,6 +18,11 @@ const { Server } = require('socket.io');
 //Load environment variables
 dotenv.config();
 
+// setup app and config values
+const app = express();
+const PORT = process.env.PORT || 5000;
+const MONGO_URI = process.env.DB_URL + process.env.DBNAME;
+
 //check required environment variables early in the application
 checkEnvVars(["DB_URL", "DBNAME", "JWT_SECRET"]);
 
@@ -43,11 +48,30 @@ app.use('/api/chat', chatRoutes); // Chat routes
 app.use('/api/message', messageRoutes); // Message routes
 app.use('/api/search', searchRoutes); // Search routes
 
-//Database connections
-mongoose(MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true})
+//Connect to MongoDB
+mongoose.connect(MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true})
     .then(() => {
         console.log('✅ MongoDB connected');
     })
     .catch((err) => {
         console.error('❌ MongoDB connection error:', err);
     });
+
+//Test Routes
+app.get('/', (req, res) => {
+    res.send('✅Server is running...');
+});
+
+// Global Error Handling Middleware
+app.use((err, req, res, next) => {
+    console.error("❌ Error:", err);
+    const statusCode = err.statusCode || 500;
+    const message = err.message || 'Internal Server Error';
+    res.status(statusCode).json({ message });
+    });
+
+//Start the server
+app.listen(PORT, () => {
+    console.log(`✅ Server is running on port ${PORT}`);
+}
+);
