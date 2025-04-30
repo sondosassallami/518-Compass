@@ -32,3 +32,22 @@ app.use(cors({
 );
 
 //API Routes
+app.use('/api/auth', authRoutes); // Authentication routes
+app.use('/api/user', userRoutes); // User routes
+app.use('/api/post', postRoutes); // Post routes
+app.use('/api/comment', commentRoutes); // Comment routes
+app.use('/api/like', likeRoutes); // Like routes
+app.use('/api/follow', followRoutes); // Follow routes
+app.use('/api/notification', notificationRoutes); // Notification routes
+app.use('/api/chat', chatRoutes); // Chat routes
+app.use('/api/message', messageRoutes); // Message routes
+app.use('/api/search', searchRoutes); // Search routes
+
+//Database connections
+mongoose(MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true})
+    .then(() => {
+        console.log('✅ MongoDB connected');
+    })
+    .catch((err) => {
+        console.error('❌ MongoDB connection error:', err);
+    });
