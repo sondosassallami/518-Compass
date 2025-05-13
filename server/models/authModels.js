@@ -1,28 +1,26 @@
-const express = require('express');
-const router = express.Router();
-const {
-    getUserProfile,
-    loginUser,
-    registerUser,
-    updateUserProfile,
-    deleteUser,
-} = require("../controllers/authControllers");
-    const protect = require("../middleware/authMiddleware");
+const mongoose = require('mongoose');
 
-    //routes to get the logged in user profile (GET request) which is why /me is used
-    router.get("/me", protect, getUserProfile);
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, 'Name is required'],
+    },
+    email: {
+      type: String,
+      required: [true, 'Email is required'],
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
+    password: {
+      type: String,
+      required: [true, 'Password is required'],
+    },
+  },
+  {
+    timestamps: true, // Automatically adds createdAt and updatedAt
+  }
+);
 
-    //update logged in user profile (PUT request)
-    router.put("/me", protect, updateUserProfile);
-
-    //delete logged in user profile (DELETE request)
-    router.delete("/me", protect, deleteUser);
-
-    //register a new user (POST request)
-    router.post("/register", registerUser);
-    //login a user (POST request)
-    router.post("/login", loginUser);
-    //logout a user (POST request)
-    router.post("/logout", logoutUser);
-
-    module.exports = router;
+module.exports = mongoose.model('User', userSchema);
