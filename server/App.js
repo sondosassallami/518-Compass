@@ -5,6 +5,16 @@ const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/auth');
 const path = require('path');
+const userRoutes = require('./routes/user'); //(Profile realted)
+// const postRoutes = require('./routes/post');
+// const commentRoutes = require('./routes/comment');
+// const likeRoutes = require('./routes/like');
+// const followRoutes = require('./routes/follow');
+// const notificationRoutes = require('./routes/notification');
+// const chatRoutes = require('./routes/chat');
+// const messageRoutes = require('./routes/message');
+// const searchRoutes = require('./routes/search');
+// const { Server } = require('socket.io');
 
 // ✅ Load environment variables from server/.env
 dotenv.config({ path: path.resolve(__dirname, '.env') });
@@ -49,6 +59,15 @@ app.use((req, res, next) => {
 
 // ✅ Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes); // User routes
+// app.use('/api/post', postRoutes); // Post routes
+// app.use('/api/comment', commentRoutes); // Comment routes
+// app.use('/api/like', likeRoutes); // Like routes
+// app.use('/api/follow', followRoutes); // Follow routes
+// app.use('/api/notification', notificationRoutes); // Notification routes
+// app.use('/api/chat', chatRoutes); // Chat routes
+// app.use('/api/message', messageRoutes); // Message routes
+// app.use('/api/search', searchRoutes); // Search routes
 
 // ✅ MongoDB Connection
 mongoose.connect(MONGO_URI)
