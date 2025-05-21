@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/auth');
 const path = require('path');
 const userRoutes = require('./routes/user'); //(Profile realted)
-// const postRoutes = require('./routes/post');
+const postRoutes = require('./routes/post'); //MOST CRUCIAL ROUTE
 // const commentRoutes = require('./routes/comment');
 // const likeRoutes = require('./routes/like');
 // const followRoutes = require('./routes/follow');
@@ -60,7 +60,7 @@ app.use((req, res, next) => {
 // ✅ Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes); // User routes
-// app.use('/api/post', postRoutes); // Post routes
+app.use('/api/post', postRoutes); // Post routes
 // app.use('/api/comment', commentRoutes); // Comment routes
 // app.use('/api/like', likeRoutes); // Like routes
 // app.use('/api/follow', followRoutes); // Follow routes
