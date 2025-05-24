@@ -7,7 +7,7 @@ const authRoutes = require('./routes/auth');
 const path = require('path');
 const userRoutes = require('./routes/user'); //(Profile realted)
 const postRoutes = require('./routes/post'); //MOST CRUCIAL ROUTE
-// const commentRoutes = require('./routes/comment');
+const commentRoutes = require('./routes/comment');
 // const likeRoutes = require('./routes/like');
 // const followRoutes = require('./routes/follow');
 // const notificationRoutes = require('./routes/notification');
@@ -61,7 +61,7 @@ app.use((req, res, next) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes); // User routes
 app.use('/api/post', postRoutes); // Post routes
-// app.use('/api/comment', commentRoutes); // Comment routes
+app.use('/api/comment', commentRoutes); // Comment routes
 // app.use('/api/like', likeRoutes); // Like routes
 // app.use('/api/follow', followRoutes); // Follow routes
 // app.use('/api/notification', notificationRoutes); // Notification routes
