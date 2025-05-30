@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
+const openHoursSchema = new mongoose.Schema({
+  open: { type: String, required: true },  // e.g. "08:00"
+  close: { type: String, required: true }  // e.g. "20:00"
+}, { _id: false });
+
 const postSchema = new mongoose.Schema({
-  post: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Post',
-    required: true,
-  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -16,13 +16,36 @@ const postSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  comment: {
+  description: {
     type: String,
     required: true,
     trim: true,
   },
-}, {
-  timestamps: true,
-});
+  photo: {
+    type: String, // URL to the image
+    required: false,
+  },
+  likes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
+  openHours: {
+    monday: openHoursSchema,
+    tuesday: openHoursSchema,
+    wednesday: openHoursSchema,
+    thursday: openHoursSchema,
+    friday: openHoursSchema,
+    saturday: openHoursSchema,
+    sunday: openHoursSchema,
+  },
+  timezone: {
+    type: String,
+    default: 'America/New_York',
+  },
+  isPublished: {
+    type: Boolean,
+    default: false,
+  },
+}, { timestamps: true });
 
 module.exports = mongoose.model('Post', postSchema);
