@@ -12,6 +12,7 @@ const likeRoutes = require('./routes/like');
 const chatRoutes = require('./routes/chat'); 
 const messageRoutes = require('./routes/message'); 
 const searchRoutes = require('./routes/search');
+const followRoutes = require('./routes/follow'); // Follow routes
 // const { Server } = require('socket.io');
 //***/ const notificationRoutes = require('./routes/notification');
 
@@ -66,6 +67,8 @@ app.use('/api/like', likeRoutes); // Like routes
 app.use('/api/chat', chatRoutes); // Chat routes
 app.use('/api/message', messageRoutes); // Message routes
 app.use('/api/search', searchRoutes); // Search routes
+app.use('/api/follow', followRoutes); // Follow routes
+
 // app.use('/api/notification', notificationRoutes); // Notification routes
 
 // ✅ MongoDB Connection
