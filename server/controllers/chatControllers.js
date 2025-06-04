@@ -62,30 +62,10 @@ const deleteChat = async (req, res) => {
   }
 };
 
-// Send a message to a chat room
-const sendMessage = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { content, sender } = req.body;
-
-    const chat = await Chat.findById(id);
-    if (!chat) {
-      return res.status(404).json({ message: "Chat room not found" });
-    }
-
-    chat.messages.push({ sender, content });
-    await chat.save();
-
-    res.status(200).json({ message: "Message sent successfully", chat });
-  } catch (error) {
-    res.status(500).json({ message: "Error sending message", error: error.message });
-  }
-};
 
 module.exports = {
   createChat,
   getAllChats,
   updateChat,
   deleteChat,
-  sendMessage,
 };

@@ -1,4 +1,4 @@
-console.log('✅LOADED like');
+console.log('✅Loaded like toggle!');
 
 const express = require('express');
 const router = express.Router();
@@ -9,3 +9,4 @@ router.put('/:postId', (req, res) => {
 });
 
 module.exports = router;
+//each time i test on postman, its like i turned on the on and off like button

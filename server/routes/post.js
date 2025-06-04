@@ -22,7 +22,7 @@ router.post('/', verifyToken, createPost); //create an entry with model and toke
 router.put('/:id', verifyToken, updatePost); // http://localhost:7200/api/posts/:id
 
 // DELETE post (auth + ownership)
-router.delete('/:id', verifyToken, deletePost); // http://localhost:7200/api/posts/:id
+router.delete('/:id', verifyToken, deletePost); //
 
 module.exports = router;
 
