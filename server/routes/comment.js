@@ -5,9 +5,9 @@ const protect = require('../middleware/authMiddleware'); // Changed from verifyT
 
 console.log('✅ Loading comment routes');
 
-router.get('/:postId', getCommentsByPost);
-router.post('/:postId', protect, createComment);
-router.put('/:id', protect, updateComment);
-router.delete('/:id', protect, deleteComment);
+router.get('/:postId', getCommentsByPost); //http://localhost:7200/api/comments/:postId to get comments for a specific post
+router.post('/:postId', protect, createComment); // http://localhost:7200/api/comments/:postId to create a new comment for a specific post
+router.put('/:id', protect, updateComment); // http://localhost:7200/api/comments/:id to update a specific comment
+router.delete('/:id', protect, deleteComment); // http://localhost:7200/api/comments/:id to delete a specific comment
 
 module.exports = router;
