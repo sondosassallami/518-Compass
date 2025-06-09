@@ -13,8 +13,8 @@ const chatRoutes = require('./routes/chat');
 const messageRoutes = require('./routes/message'); 
 const searchRoutes = require('./routes/search');
 const followRoutes = require('./routes/follow'); // Follow routes
+const notificationRoutes = require('./routes/notification');
 // const { Server } = require('socket.io');
-//***/ const notificationRoutes = require('./routes/notification');
 
 
 // ✅ Load environment variables from server/.env
@@ -68,8 +68,7 @@ app.use('/api/chat', chatRoutes); // Chat routes
 app.use('/api/message', messageRoutes); // Message routes
 app.use('/api/search', searchRoutes); // Search routes
 app.use('/api/follow', followRoutes); // Follow routes
-
-// app.use('/api/notification', notificationRoutes); // Notification routes
+app.use('/api/notification', notificationRoutes); // Notification routes
 
 // ✅ MongoDB Connection
 mongoose.connect(MONGO_URI)
@@ -92,7 +91,7 @@ app.use((err, req, res, next) => {
 
 // ✅ Start Server
 const server = app.listen(PORT, () => {
-    console.log(`🚀 Server is running on port ${PORT}`);
+    console.log(`✅ Server is running on port ${PORT}`);
 });
 
 // ✅ Handle port conflicts
