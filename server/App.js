@@ -14,7 +14,7 @@ const messageRoutes = require('./routes/message');
 const searchRoutes = require('./routes/search');
 const followRoutes = require('./routes/follow'); // Follow routes
 const notificationRoutes = require('./routes/notification');
-// const { Server } = require('socket.io');
+const { Server } = require('socket.io');
 
 
 // ✅ Load environment variables from server/.env
@@ -93,6 +93,27 @@ app.use((err, req, res, next) => {
 const server = app.listen(PORT, () => {
     console.log(`✅ Server is running on port ${PORT}`);
 });
+const io = new Server(server, {
+    cors: {
+      origin: '*', 
+      methods: ['GET', 'POST']
+    }
+  });
+  io.on('connection', (socket) => {
+    console.log('🟢 A user connected:', socket.id);
+  
+    // When a user sends a message
+    socket.on('send_message', (data) => {
+      console.log('📨 Message received:', data);
+      io.emit('receive_message', data); // Send to everyone
+    });
+  
+    // When a user disconnects
+    socket.on('disconnect', () => {
+      console.log('🔴 A user disconnected:', socket.id);
+    });
+  });
+    
 
 // ✅ Handle port conflicts
 server.on('error', (err) => {
