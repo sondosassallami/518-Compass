@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import NavBar from './Components/NavBar'; //check here
+import NavBar from './Components/NavBar';
 import SignUp from './Pages/SignUp';
 import Login from './Pages/Login';
 import MainPage from './Pages/MainPage';
-import About from './Pages/About'; //p
+import About from './Pages/About';
 import Feedback from './Pages/Feedback';
-import UserProfile from './Pages/UserProfile'; //p
+import UserProfile from './Pages/UserProfile';
 import NotFound from './Pages/NotFound';
 import ChatRooms from './Pages/ChatRooms';
 
