@@ -2,12 +2,9 @@ import React, { useState } from 'react';
 import '../App.css';
 
 function SignUp() {
-  // form state
-  const [username, setUsername] = useState('');
+  const [name, setName] = useState(''); // Changed from username
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  // message state
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
 
@@ -20,7 +17,7 @@ function SignUp() {
       const response = await fetch('http://localhost:7200/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify({ name, email, password }), // Changed to name
       });
 
       if (!response.ok) {
@@ -28,8 +25,9 @@ function SignUp() {
         throw new Error(errData.message || 'Failed to register');
       }
 
-      setMessage('Account created successfully! You can now log in.');
-      setUsername('');
+      const data = await response.json();
+      setMessage('Account created successfully! You can now log in.'); // Add success message
+      setName('');
       setEmail('');
       setPassword('');
     } catch (err) {
@@ -44,11 +42,11 @@ function SignUp() {
         <form style={styles.form} onSubmit={handleSubmit}>
           <input
             type="text"
-            placeholder="Username"
+            placeholder="Username" // Could update to "Name" for clarity
             required
             style={styles.input}
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={name} // Changed from username
+            onChange={(e) => setName(e.target.value)} // Changed from username
           />
           <input
             type="email"
@@ -121,4 +119,4 @@ const styles = {
   },
 };
 
-export default SignUp;
+export default SignUp; // Add this line to export the component
