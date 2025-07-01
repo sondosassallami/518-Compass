@@ -1,13 +1,14 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import NavBar from './Components/NavBar';
 import SignUp from './Pages/SignUp';
-import Login from './Pages/Login';
 import MainPage from './Pages/MainPage';
 import About from './Pages/About';
 import Feedback from './Pages/Feedback';
 import UserProfile from './Pages/UserProfile';
 import NotFound from './Pages/NotFound';
 import ChatRooms from './Pages/ChatRooms';
+// Optional: Keep SignUp if you want a separate signup page, but it's redundant now
+// import SignUp from './Pages/SignUp';
 
 function App() {
   return (
@@ -15,8 +16,8 @@ function App() {
       <NavBar />
       <Routes>
         <Route path="/" element={<MainPage />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/login" element={<Login />} />
+        {/* Optional: Remove or keep /signup based on preference */}
+        {/* <Route path="/signup" element={<SignUp />} /> */}
         <Route path="/about" element={<About />} />
         <Route path="/feedback" element={<Feedback />} />
         <Route path="/profile" element={<UserProfile />} />

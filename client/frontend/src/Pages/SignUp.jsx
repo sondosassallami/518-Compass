@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Add this import
 import '../App.css';
 
 function SignUp() {
-  const [name, setName] = useState(''); // Changed from username
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
+  const navigate = useNavigate(); // Add this hook
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,7 +19,7 @@ function SignUp() {
       const response = await fetch('http://localhost:7200/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }), // Changed to name
+        body: JSON.stringify({ name, email, password }),
       });
 
       if (!response.ok) {
@@ -26,10 +28,12 @@ function SignUp() {
       }
 
       const data = await response.json();
-      setMessage('Account created successfully! You can now log in.'); // Add success message
+      setMessage('Account created successfully! You can now log in.');
       setName('');
       setEmail('');
       setPassword('');
+      // Redirect to login page after a short delay (e.g., 2 seconds) to show message
+      setTimeout(() => navigate('/'), 2000);
     } catch (err) {
       setError(err.message);
     }
@@ -42,11 +46,11 @@ function SignUp() {
         <form style={styles.form} onSubmit={handleSubmit}>
           <input
             type="text"
-            placeholder="Username" // Could update to "Name" for clarity
+            placeholder="Username"
             required
             style={styles.input}
-            value={name} // Changed from username
-            onChange={(e) => setName(e.target.value)} // Changed from username
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
           <input
             type="email"
@@ -119,4 +123,4 @@ const styles = {
   },
 };
 
-export default SignUp; // Add this line to export the component
+export default SignUp;
