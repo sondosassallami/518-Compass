@@ -18,6 +18,7 @@ function App() {
         <Route path="/" element={<MainPage />} />
         {/* Optional: Remove or keep /signup based on preference */}
         {/* <Route path="/signup" element={<SignUp />} /> */}
+        <Route path="/home" element={<MainPage/>} />
         <Route path="/about" element={<About />} />
         <Route path="/feedback" element={<Feedback />} />
         <Route path="/profile" element={<UserProfile />} />
