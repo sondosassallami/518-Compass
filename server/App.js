@@ -39,6 +39,9 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
+// ✅ Serve uploaded images
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); 
+
 // ✅ CORS setup from .env
 const allowedOrigins = process.env.CORS_ORIGIN?.split(',') || [];
 

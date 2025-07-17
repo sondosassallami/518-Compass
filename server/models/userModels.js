@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -17,10 +16,20 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Password is required'],
     },
+    bio: {
+      type: String,
+      default: '',  // bio is optional with empty string default
+    },
+    profilePic: {
+      type: String,
+      default: '', // optional, empty string means no profile picture yet
+    },
   },
   {
-    timestamps: true, // Automatically adds createdAt and updatedAt
+    timestamps: true,
   }
 );
 
-module.exports = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;
