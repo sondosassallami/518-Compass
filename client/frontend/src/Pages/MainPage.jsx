@@ -4,6 +4,7 @@ import '../App.css';
 
 function MainPage() {
   const [user, setUser] = useState(null);
+  const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -13,15 +14,26 @@ function MainPage() {
       return;
     }
 
+    // Fetch user
     fetch('http://localhost:7200/api/user/me', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
       .then((data) => setUser(data))
       .catch(console.error);
+
+    // Fetch posts
+    fetch('http://localhost:7200/api/posts', {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => setPosts(data))
+      .catch(console.error);
   }, [navigate]);
+
+  const handlePostClick = () => {
+    navigate('/create-post');
+  };
 
   return (
     <div style={styles.page}>
@@ -31,13 +43,8 @@ function MainPage() {
           <a href="/main" style={styles.navLink}>Home</a>
           <a href="/profile" style={styles.navLink}>Profile</a>
           <a href="/chatrooms" style={styles.navLink}>Chat</a>
-          <a
-            href="/"
-            onClick={() => { localStorage.removeItem('token'); }}
-            style={styles.navLink}
-          >
-            Logout
-          </a>
+          <a href="/" onClick={() => localStorage.removeItem('token')} style={styles.navLink}>Logout</a>
+          <button onClick={handlePostClick} style={styles.postButton}>Post</button>
         </div>
       </nav>
 
@@ -48,7 +55,46 @@ function MainPage() {
 
       <div style={styles.feedBox}>
         <h2 style={styles.feedHeader}>Community Feed</h2>
-        <p style={styles.feedPlaceholder}>Placeholder for user posts. Work on posting content here later.</p>
+        {posts.length > 0 ? (
+          posts.map((post) => (
+            <div key={post._id} style={styles.post}>
+              <h3>{post.title}</h3>
+              <p><strong>Address:</strong> {post.address}</p>
+              <p><strong>Posted by:</strong> {post.username}</p>
+              <p><strong>Time Posted:</strong> {new Date(post.timePosted).toLocaleString('en-US', { timeZone: 'America/New_York' })}</p>
+              <p><strong>Status:</strong> {post.isOpen ? 'Open' : 'Closed'}</p>
+              <p>{post.content}</p>
+              {post.photos && post.photos.length > 0 && (
+                <div>
+                  {post.photos.map((photo, index) => (
+                    <img key={index} src={photo} alt={`Post ${post._id}`} style={styles.postImage} />
+                  ))}
+                </div>
+              )}
+              {post.videos && post.videos.length > 0 && (
+                <div>
+                  {post.videos.map((video, index) => (
+                    <video key={index} controls style={styles.postVideo}>
+                      <source src={video} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  ))}
+                </div>
+              )}
+              <div style={styles.commentsSection}>
+                <h4>Comments</h4>
+                {post.comments && post.comments.map((comment, index) => (
+                  <div key={index} style={styles.comment}>
+                    <img src={comment.profilePhoto} alt={`${comment.username}'s profile`} style={styles.commentPhoto} />
+                    <p><strong>{comment.username}:</strong> {comment.text}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))
+        ) : (
+          <p style={styles.feedPlaceholder}>No posts available. Be the first to post!</p>
+        )}
       </div>
 
       <div style={styles.footer}>
@@ -56,7 +102,6 @@ function MainPage() {
         <a href="/feedback" className="footer-link">Feedback</a>
       </div>
 
-      {/* CSS for hover effect on footer links */}
       <style>{`
         .footer-link {
           color: white;
@@ -64,12 +109,24 @@ function MainPage() {
           font-size: 1.1rem;
           font-weight: 500;
           padding: 8px 20px;
-          border-radius: 8px;
+          borderRadius: 8px;
           transition: background-color 0.3s ease, color 0.3s ease;
         }
         .footer-link:hover {
-          background-color: #004d40; /* darker emerald for hover */
+          background-color: #004d40;
           color: #a5d6a7;
+        }
+        .postButton {
+          background-color: #00695c;
+          color: white;
+          border: none;
+          padding: 5px 10px;
+          border-radius: 5px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        }
+        .postButton:hover {
+          background-color: #a5d6a7;
         }
       `}</style>
     </div>
@@ -89,20 +146,32 @@ const styles = {
     alignItems: 'center',
     backgroundColor: '#00695c',
     color: 'white',
-    padding: '10px 20px',
-    borderRadius: '8px',
+    padding: '5px',
+    borderRadius: '0',
     marginBottom: '20px',
     width: '100%',
     left: 0,
+    right: 0,
     position: 'fixed',
+    top: 0,
+    zIndex: 1000,
+    overflow: 'hidden',
+    flexWrap: 'nowrap',
   },
   navTitle: { margin: 0, fontSize: '1.5rem' },
-  navLinks: { display: 'flex', alignItems: 'center', gap: '15px' },
-  navLink: { color: 'white', textDecoration: 'none', fontSize: '1rem', padding: '5px 10px' },
+  navLinks: { display: 'flex', alignItems: 'center', gap: '5px' },
+  navLink: { 
+    color: 'white', 
+    textDecoration: 'none', 
+    fontSize: '1rem', 
+    padding: '5px 10px',
+    transition: 'color 0.3s ease',
+    '&:hover': { color: '#a5d6a7' }
+  },
   welcomeBox: {
     backgroundColor: 'white',
-    maxWidth: '600px',
-    margin: '40px auto',
+    maxWidth: '1800px',
+    margin: '80px auto 40px',
     padding: '30px',
     borderRadius: '12px',
     boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
@@ -112,7 +181,7 @@ const styles = {
   subText: { color: '#444', fontSize: '1.1rem' },
   feedBox: {
     backgroundColor: 'white',
-    maxWidth: '600px',
+    maxWidth: '1800px',
     margin: '40px auto',
     padding: '20px',
     borderRadius: '12px',
@@ -120,8 +189,35 @@ const styles = {
   },
   feedHeader: { color: '#00695c', marginBottom: '10px', fontSize: '1.5rem' },
   feedPlaceholder: { color: '#666', fontStyle: 'italic' },
+  post: {
+    marginBottom: '20px',
+    padding: '15px',
+    borderBottom: '1px solid #ddd',
+  },
+  postImage: {
+    maxWidth: '200px',
+    margin: '10px 0',
+  },
+  postVideo: {
+    maxWidth: '300px',
+    margin: '10px 0',
+  },
+  commentsSection: {
+    marginTop: '10px',
+  },
+  comment: {
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: '5px',
+  },
+  commentPhoto: {
+    width: '30px',
+    height: '30px',
+    borderRadius: '50%',
+    marginRight: '10px',
+  },
   footer: {
-    backgroundColor: '#00695c', // emerald green
+    backgroundColor: '#00695c',
     padding: '20px',
     position: 'fixed',
     bottom: 0,
@@ -130,6 +226,7 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     gap: '40px',
+    zIndex: 1000,
   },
 };
 
