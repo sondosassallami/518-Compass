@@ -5,19 +5,25 @@ const {
   getLoggedInUser,
   updateUserBio,
   uploadProfilePhoto,
- 
 } = require('../controllers/userControllers');
-const verifyToken  = require("../middleware/authMiddleware");// assumes you have JWT auth
-const upload = require('../middleware/uploadMiddleware');
 
-// ✅ Get currently logged-in user's profile
-router.get('/me', verifyToken, getLoggedInUser); // http://localhost:7200/api/user/me need to be logged in with token
+const verifyToken = require("../middleware/authMiddleware"); // for JWT
+const upload = require('../middleware/uploadMiddleware'); // for Multer
 
-// ✅ Get any user's public profile by ID
-router.get('/:id', getUserProfile); // http://localhost:7200/api/user/:id need to be logged in with token
+// ✅ Get currently logged-in user's full profile
+router.get('/me', verifyToken, getLoggedInUser); 
+// URL: GET http://localhost:7200/api/user/me
 
-router.put('/:id', verifyToken, updateUserBio); // for save bio http://localhost:7200/api/user/:id need to be logged in with token
+// ✅ Upload profile picture for the logged-in user
+router.post('/me/upload-pic', verifyToken, upload.single('profilePic'), uploadProfilePhoto); 
+// URL: POST http://localhost:7200/api/user/me/upload-pic
 
-router.post('/:id/upload-pic', verifyToken, upload.single('profilePic'), uploadProfilePhoto);
+// ✅ Get any user's public profile by ID (still useful for viewing others)
+router.get('/:id', getUserProfile); 
+// URL: GET http://localhost:7200/api/user/:id
+
+// ✅ Update bio of user (same pattern — but you could also change this to /me later)
+router.put('/:id', verifyToken, updateUserBio); 
+// URL: PUT http://localhost:7200/api/user/:id
 
 module.exports = router;
