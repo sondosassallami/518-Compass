@@ -1,130 +1,125 @@
-import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../App.css';
 
 function ChatRooms() {
-  const [chatRooms, setChatRooms] = useState([{ id: 1, name: 'General', type: 'group' }, { id: 2, name: 'Random', type: 'group' }]);
-  const [users, setUsers] = useState([{ id: 1, name: 'User1' }, { id: 2, name: 'User2' }]); // Mock users for DM
+  const [chatRooms, setChatRooms] = useState([
+    { id: 1, name: 'General', type: 'group' },
+    { id: 2, name: 'Random', type: 'group' },
+  ]);
+  const [selectedRoom, setSelectedRoom] = useState(null);
   const [newRoomName, setNewRoomName] = useState('');
-  const [selectedChat, setSelectedChat] = useState(null);
-  const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState('');
-  const [navigate] = useNavigate();
-
-  useEffect(() => {
-    // Mock initial messages for the first room
-    if (selectedChat) {
-      setMessages([
-        { id: 1, user: 'User1', content: 'Hello!', timestamp: new Date().toISOString(), edited: false, deleted: false },
-        { id: 2, user: 'You', content: 'Hi there!', timestamp: new Date().toISOString(), edited: false, deleted: false },
-      ]);
-    }
-  }, [selectedChat]);
+  const [newDmUser, setNewDmUser] = useState('');
+  const navigate = useNavigate();
 
   const handleCreateRoom = (e) => {
     e.preventDefault();
-    if (newRoomName.trim() && !chatRooms.some(room => room.name === newRoomName.trim())) {
-      setChatRooms([...chatRooms, { id: Date.now(), name: newRoomName.trim(), type: 'group' }]);
-      setNewRoomName('');
-    } else {
-      alert('Please enter a unique room name.');
-    }
+    if (!newRoomName.trim()) return;
+    const newRoom = { id: Date.now(), name: newRoomName.trim(), type: 'group' };
+    setChatRooms((prev) => [...prev, newRoom]);
+    setNewRoomName('');
   };
 
-  const handleCreateDM = (user) => {
-    const dmName = `DM with ${user.name}`;
-    if (!chatRooms.some(room => room.name === dmName)) {
-      setChatRooms([...chatRooms, { id: Date.now(), name: dmName, type: 'dm', userId: user.id }]);
-    }
-    setSelectedChat({ id: Date.now(), name: dmName, type: 'dm', userId: user.id });
-  };
-
-  const handleSendMessage = (e) => {
-    e.preventDefault();
-    if (newMessage.trim() && selectedChat) {
-      setMessages([...messages, { id: Date.now(), user: 'You', content: newMessage.trim(), timestamp: new Date().toISOString(), edited: false, deleted: false }]);
-      setNewMessage('');
-    }
-  };
-
-  const handleEditMessage = (id, newContent) => {
-    setMessages(messages.map(msg => msg.id === id ? { ...msg, content: newContent, timestamp: new Date().toISOString(), edited: true } : msg));
-  };
-
-  const handleDeleteMessage = (id) => {
-    setMessages(messages.map(msg => msg.id === id ? { ...msg, content: '[Message deleted]', timestamp: new Date().toISOString(), deleted: true } : msg));
+  const handleCreateDm = () => {
+    if (!newDmUser.trim()) return;
+    const dmRoom = { id: Date.now(), name: `DM: ${newDmUser.trim()}`, type: 'dm' };
+    setChatRooms((prev) => [...prev, dmRoom]);
+    setNewDmUser('');
   };
 
   return (
     <div style={styles.page}>
+      {/* Navbar */}
       <nav style={styles.navbar}>
-        <h3 style={styles.navTitle}>518 Compass Chat</h3>
-        <div>
-          <a href="/" style={styles.navLink}>Home</a>
-          <a href="/profile" style={styles.navLink}>Profile</a>
-          <button onClick={() => { localStorage.removeItem('token'); navigate('/'); }} style={styles.navButton}>Logout</button>
+        <h3 style={styles.navTitle}>518 Compass</h3>
+        <div style={styles.navLinks}>
+          <a href="/home" className="footer-link">Home</a>
+          <a href="/profile" className="footer-link">Profile</a>
+          <a href="/chatrooms" className="footer-link">Chat</a>
+          <a href="/map" className="footer-link">Map</a>
+          <a href="/createpost" className="footer-link">Create a Post</a>
+          <a href="/search" className="footer-link">Search</a>
+          <a href="/" onClick={() => localStorage.removeItem('token')} className="footer-link">Logout</a>
         </div>
       </nav>
 
-      <div style={styles.chatContainer}>
-        <div style={styles.roomList}>
-          <h3 style={styles.sectionTitle}>Chat Rooms</h3>
-          <form onSubmit={handleCreateRoom} style={styles.form}>
-            <input
-              type="text"
-              placeholder="New group chat name"
-              value={newRoomName}
-              onChange={(e) => setNewRoomName(e.target.value)}
-              style={styles.input}
-            />
-            <button type="submit" style={styles.button}>Create Group</button>
-          </form>
-          <h4 style={styles.subTitle}>Direct Messages</h4>
-          {users.map(user => (
-            <button key={user.id} onClick={() => handleCreateDM(user)} style={styles.dmButton}>
-              {user.name}
-            </button>
-          ))}
-          <ul style={styles.roomUl}>
-            {chatRooms.map(room => (
-              <li key={room.id} style={styles.roomLi}>
-                <button onClick={() => setSelectedChat(room)} style={styles.roomButton}>
-                  {room.name} ({room.type === 'dm' ? 'DM' : 'Group'})
-                </button>
-              </li>
-            ))}
-          </ul>
+      {/* Content */}
+      <main style={styles.contentBox}>
+        <h2 style={styles.headerText}>Chat Rooms</h2>
+
+        {/* Create New Room */}
+        <form onSubmit={handleCreateRoom} style={styles.form}>
+          <input
+            type="text"
+            placeholder="New room name"
+            value={newRoomName}
+            onChange={(e) => setNewRoomName(e.target.value)}
+            style={styles.input}
+          />
+          <button type="submit" style={styles.button}>Create Room</button>
+        </form>
+
+        {/* Create DM */}
+        <div style={styles.dmContainer}>
+          <input
+            type="text"
+            placeholder="Username for DM"
+            value={newDmUser}
+            onChange={(e) => setNewDmUser(e.target.value)}
+            style={styles.input}
+          />
+          <button onClick={handleCreateDm} style={styles.dmButton}>Start DM</button>
         </div>
 
-        {selectedChat && (
+        {/* Chat Room List */}
+        <ul style={styles.roomList}>
+          {chatRooms.map((room) => (
+            <li key={room.id} style={styles.roomListItem}>
+              <button
+                style={{
+                  ...styles.roomButton,
+                  ...(selectedRoom === room.id ? styles.roomButtonActive : {}),
+                }}
+                onClick={() => setSelectedRoom(room.id)}
+              >
+                {room.name} {room.type === 'dm' ? '(DM)' : ''}
+              </button>
+            </li>
+          ))}
+        </ul>
+
+        {/* Selected Room Display */}
+        {selectedRoom && (
           <div style={styles.chatArea}>
-            <h3 style={styles.chatTitle}>{selectedChat.name}</h3>
-            <div style={styles.messages}>
-              {messages.map(msg => (
-                <div key={msg.id} style={styles.message}>
-                  <p><strong>{msg.user}</strong>: {msg.deleted ? '[Message deleted]' : msg.content} <span style={styles.timestamp}>{new Date(msg.timestamp).toLocaleTimeString()}</span>{msg.edited && <span style={styles.edited}> (Edited)</span>}</p>
-                  {!msg.deleted && msg.user === 'You' && (
-                    <div style={styles.messageActions}>
-                      <button onClick={() => handleEditMessage(msg.id, prompt('Edit message:', msg.content) || msg.content)} style={styles.actionButton}>Edit</button>
-                      <button onClick={() => handleDeleteMessage(msg.id)} style={styles.actionButton}>Delete</button>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-            <form onSubmit={handleSendMessage} style={styles.messageForm}>
-              <input
-                type="text"
-                placeholder="Type a message..."
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                style={styles.messageInput}
-              />
-              <button type="submit" style={styles.sendButton}>Send</button>
-            </form>
+            <h3>You're in: {chatRooms.find(r => r.id === selectedRoom)?.name}</h3>
+            <p style={{ fontStyle: 'italic', color: '#666' }}>Chat messages would go here.</p>
           </div>
         )}
-      </div>
+      </main>
+
+      {/* Footer */}
+      <footer style={styles.footer}>
+        <a href="/about" className="footer-link">About</a>
+        <a href="/feedback" className="footer-link">Feedback</a>
+      </footer>
+
+      {/* Inline Styles for footer-link hover */}
+      <style>{`
+        .footer-link {
+          color: white;
+          text-decoration: none;
+          font-size: 1.1rem;
+          font-weight: 500;
+          padding: 8px 20px;
+          border-radius: 8px;
+          transition: background-color 0.3s ease, color 0.3s ease;
+          cursor: pointer;
+        }
+        .footer-link:hover {
+          background-color: #004d40;
+          color: #a5d6a7;
+        }
+      `}</style>
     </div>
   );
 }
@@ -133,7 +128,8 @@ const styles = {
   page: {
     backgroundColor: '#f0f4f8',
     minHeight: '100vh',
-    padding: '20px',
+    paddingTop: '60px', // space for fixed navbar
+    paddingBottom: '70px', // space for fixed footer
     fontFamily: 'Arial, sans-serif',
   },
   navbar: {
@@ -142,35 +138,121 @@ const styles = {
     alignItems: 'center',
     backgroundColor: '#00695c',
     color: 'white',
-    padding: '10px 20px',
-    borderRadius: '8px',
+    padding: '5px 20px',
+    borderRadius: '0',
+    marginBottom: '0',
+    width: '100%',
+    left: 0,
+    right: 0,
+    position: 'fixed',
+    top: 0,
+    zIndex: 1000,
+    overflow: 'hidden',
+    flexWrap: 'nowrap',
+  },
+  navTitle: {
+    margin: 0,
+    fontSize: '1.5rem',
+  },
+  navLinks: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+  },
+  contentBox: {
+    backgroundColor: 'white',
+    maxWidth: '900px',
+    margin: 'auto',
+    padding: '20px',
+    borderRadius: '12px',
+    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+  },
+  headerText: {
+    color: '#00695c',
+    marginBottom: '20px',
+    fontSize: '1.8rem',
+  },
+  form: {
+    display: 'flex',
+    gap: '10px',
     marginBottom: '20px',
   },
-  navTitle: { margin: 0 },
-  navLink: { color: 'white', marginLeft: '20px', textDecoration: 'none' },
-  navButton: { backgroundColor: '#fff', color: '#00695c', padding: '5px 10px', border: 'none', borderRadius: '5px', cursor: 'pointer' },
-  chatContainer: { display: 'flex', maxWidth: '1200px', margin: '0 auto', gap: '20px' },
-  roomList: { flex: '1', backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' },
-  form: { display: 'flex', gap: '10px', marginBottom: '20px' },
-  input: { flex: '1', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' },
-  button: { backgroundColor: '#00695c', color: 'white', border: 'none', borderRadius: '5px', padding: '10px', cursor: 'pointer' },
-  dmButton: { width: '100%', marginBottom: '10px', backgroundColor: '#00796b', color: 'white', border: 'none', borderRadius: '5px', padding: '10px', cursor: 'pointer' },
-  roomUl: { listStyle: 'none', padding: 0 },
-  roomLi: { marginBottom: '10px' },
-  roomButton: { width: '100%', padding: '10px', backgroundColor: '#e0f2f1', border: 'none', borderRadius: '5px', cursor: 'pointer' },
-  chatArea: { flex: '3', backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' },
-  chatTitle: { color: '#00695c', marginBottom: '20px' },
-  messages: { height: '400px', overflowY: 'auto', marginBottom: '20px', padding: '10px', backgroundColor: '#f9f9f9', borderRadius: '5px' },
-  message: { marginBottom: '15px', padding: '10px', backgroundColor: '#fff', borderRadius: '5px' },
-  messageActions: { marginTop: '5px' },
-  actionButton: { backgroundColor: '#00695c', color: 'white', border: 'none', borderRadius: '5px', padding: '5px 10px', marginRight: '10px', cursor: 'pointer' },
-  timestamp: { color: '#666', fontSize: '12px' },
-  edited: { color: '#ff9800', fontSize: '12px' },
-  messageForm: { display: 'flex', gap: '10px' },
-  messageInput: { flex: '1', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' },
-  sendButton: { backgroundColor: '#00695c', color: 'white', border: 'none', borderRadius: '5px', padding: '10px', cursor: 'pointer' },
-  sectionTitle: { color: '#00695c', marginBottom: '10px' },
-  subTitle: { color: '#004d40', marginBottom: '10px' },
+  input: {
+    flexGrow: 1,
+    padding: '10px',
+    fontSize: '1rem',
+    borderRadius: '6px',
+    border: '1px solid #ccc',
+    outline: 'none',
+  },
+  button: {
+    backgroundColor: '#00695c',
+    color: 'white',
+    border: 'none',
+    borderRadius: '6px',
+    padding: '10px 20px',
+    cursor: 'pointer',
+    fontWeight: '600',
+    transition: 'background-color 0.3s ease',
+  },
+  dmContainer: {
+    display: 'flex',
+    gap: '10px',
+    marginBottom: '20px',
+  },
+  dmButton: {
+    backgroundColor: '#004d40',
+    color: 'white',
+    border: 'none',
+    borderRadius: '6px',
+    padding: '10px 20px',
+    cursor: 'pointer',
+    fontWeight: '600',
+    transition: 'background-color 0.3s ease',
+  },
+  roomList: {
+    listStyle: 'none',
+    paddingLeft: 0,
+    marginBottom: '20px',
+  },
+  roomListItem: {
+    marginBottom: '10px',
+  },
+  roomButton: {
+    width: '100%',
+    padding: '12px',
+    borderRadius: '8px',
+    border: '1px solid #00695c',
+    backgroundColor: 'white',
+    color: '#00695c',
+    fontWeight: '600',
+    cursor: 'pointer',
+    textAlign: 'left',
+    transition: 'background-color 0.3s ease, color 0.3s ease',
+  },
+  roomButtonActive: {
+    backgroundColor: '#00695c',
+    color: 'white',
+  },
+  chatArea: {
+    padding: '15px',
+    borderRadius: '8px',
+    border: '1px solid #ccc',
+    backgroundColor: '#fafafa',
+    color: '#444',
+  },
+  footer: {
+    backgroundColor: '#00695c',
+    padding: '20px',
+    position: 'fixed',
+    bottom: 0,
+    width: '100%',
+    left: 0,
+    display: 'flex',
+    justifyContent: 'center',
+    gap: '40px',
+    zIndex: 1000,
+  },
 };
 
 export default ChatRooms;

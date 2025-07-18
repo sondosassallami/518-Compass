@@ -39,7 +39,7 @@ function MainPage() {
       <nav style={styles.navbar}>
         <h3 style={styles.navTitle}>518 Compass</h3>
         <div style={styles.navLinks}>
-          <a href="/main" className="footer-link">Home</a>
+          <a href="/home" className="footer-link">Home</a>
           <a href="/profile" className="footer-link">Profile</a>
           <a href="/chatrooms" className="footer-link">Chat</a>
           <a href="/map" className="footer-link">Map</a>
