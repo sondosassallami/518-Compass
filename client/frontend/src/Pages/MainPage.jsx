@@ -1,3 +1,4 @@
+// src/Pages/MainPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../App.css';
@@ -14,7 +15,6 @@ function MainPage() {
       return;
     }
 
-    // Fetch user
     fetch('http://localhost:7200/api/user/me', {
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -22,7 +22,6 @@ function MainPage() {
       .then((data) => setUser(data))
       .catch(console.error);
 
-    // Fetch posts
     fetch('http://localhost:7200/api/posts', {
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -40,11 +39,13 @@ function MainPage() {
       <nav style={styles.navbar}>
         <h3 style={styles.navTitle}>518 Compass</h3>
         <div style={styles.navLinks}>
-          <a href="/main" style={styles.navLink}>Home</a>
-          <a href="/profile" style={styles.navLink}>Profile</a>
-          <a href="/chatrooms" style={styles.navLink}>Chat</a>
-          <a href="/" onClick={() => localStorage.removeItem('token')} style={styles.navLink}>Logout</a>
-          <button onClick={handlePostClick} style={styles.postButton}>Post</button>
+          <a href="/main" className="footer-link">Home</a>
+          <a href="/profile" className="footer-link">Profile</a>
+          <a href="/chatrooms" className="footer-link">Chat</a>
+          <a href="/map" className="footer-link">Map</a>
+          <a href="/createpost" className="footer-link">Create a Post</a>
+          <a href="/search" className="footer-link">Search</a>
+          <a href="/" onClick={() => localStorage.removeItem('token')} className="footer-link">Logout</a>
         </div>
       </nav>
 
@@ -109,7 +110,7 @@ function MainPage() {
           font-size: 1.1rem;
           font-weight: 500;
           padding: 8px 20px;
-          borderRadius: 8px;
+          border-radius: 8px;
           transition: background-color 0.3s ease, color 0.3s ease;
         }
         .footer-link:hover {
@@ -160,14 +161,6 @@ const styles = {
   },
   navTitle: { margin: 0, fontSize: '1.5rem' },
   navLinks: { display: 'flex', alignItems: 'center', gap: '5px' },
-  navLink: { 
-    color: 'white', 
-    textDecoration: 'none', 
-    fontSize: '1rem', 
-    padding: '5px 10px',
-    transition: 'color 0.3s ease',
-    '&:hover': { color: '#a5d6a7' }
-  },
   welcomeBox: {
     backgroundColor: 'white',
     maxWidth: '1800px',
